@@ -2,11 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum BallColor
+{
+    Blue,
+    Green,
+    Red,
+    Yellow
+}
+
 public class Ball : MonoBehaviour
 {
+    public BallColor ballColor;
+
     private int _pathIndex = 1;
-    public float Speed = 10;
+    public float Speed;
     private List<Ball> _neighbourBalls = new List<Ball>();
+    public int IndexInQueue = 0;
 
     public void UpdateMove(Transform[] path)
     {
@@ -33,6 +44,17 @@ public class Ball : MonoBehaviour
 
         direction.Normalize();
         transform.position += moveStep * direction;
+
+        PushOtherBalls(path);
+    }
+
+    public void UpdateMove(Transform[] path, float distance)
+    {
+        while(distance > 0)
+        {
+            distance -= Time.deltaTime * Speed;
+            UpdateMove(path);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -50,6 +72,17 @@ public class Ball : MonoBehaviour
         if (collision.TryGetComponent<Ball>(out otherBall))
         {
             _neighbourBalls.Remove(otherBall);
+        }
+    }
+
+    public void PushOtherBalls(Transform[] path)
+    {
+        foreach (Ball ball in _neighbourBalls)
+        {
+            if(ball.IndexInQueue < IndexInQueue)
+            {
+                ball.UpdateMove(path);
+            }
         }
     }
 }

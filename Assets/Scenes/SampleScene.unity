@@ -151,7 +151,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1649386126}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &161729874
 GameObject:
@@ -245,9 +245,15 @@ MonoBehaviour:
   _nodes: []
   _pathParent: {fileID: 1840049677}
   _ballsParent: {fileID: 96596710}
-  _ball: {fileID: 4146743131196752548, guid: 03dca2dfe7049794e99f6391b106d571, type: 3}
+  _frog: {fileID: 1555692548}
+  _prefabBalls:
+  - {fileID: 4146743131196752548, guid: 03dca2dfe7049794e99f6391b106d571, type: 3}
+  - {fileID: 8246623226454215392, guid: 1eaa70d3db57f2a41a9e958feba79211, type: 3}
+  - {fileID: 7266925215874332689, guid: fdefad71b9f05ce4595799907b31c1d7, type: 3}
+  - {fileID: 4793276122118290135, guid: ab66785adb185d941aab7df06e859de8, type: 3}
   _instanciationFrequency: 0.3
-  _numberOfBallsToInstanciate: 20
+  _ballSpeed: 2
+  _numberOfBallsToInstanciate: 40
 --- !u!4 &506473185
 Transform:
   m_ObjectHideFlags: 0
@@ -513,8 +519,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.5042, y: 0.034, z: 4.8669124}
   m_LocalScale: {x: 3.524354, y: 2.0846808, z: 1}
-  m_Children:
-  - {fileID: 1555692549}
+  m_Children: []
   m_Father: {fileID: 1649386126}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -603,11 +608,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1555692548}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.0896177, y: -0.22805141, z: -1}
-  m_LocalScale: {x: 0.2, y: 0.4, z: 1}
+  m_LocalPosition: {x: 3.3359985, y: -0.44141436, z: 3.8669124}
+  m_LocalScale: {x: 0.7048708, y: 0.8338723, z: 1}
   m_Children: []
-  m_Father: {fileID: 1029033859}
-  m_RootOrder: 0
+  m_Father: {fileID: 1649386126}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1555692550
 SpriteRenderer:
@@ -648,7 +653,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 8ca1274d1d8f4ad4fa980ed74ed469f9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -718,6 +723,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1029033859}
+  - {fileID: 1555692549}
   - {fileID: 96596711}
   m_Father: {fileID: 0}
   m_RootOrder: 1

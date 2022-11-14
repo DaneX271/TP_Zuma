@@ -9,9 +9,9 @@ public class BallQueue
 
     public void Update(Transform[] path)
     {
-        foreach(Ball ball in Balls)
+        if (Balls.Count > 0)
         {
-            ball.UpdateMove(path);
+            Balls[Balls.Count - 1].UpdateMove(path);
         }
     }
 }
