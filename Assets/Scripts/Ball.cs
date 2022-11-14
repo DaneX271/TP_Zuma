@@ -14,10 +14,12 @@ public class Ball : MonoBehaviour
 {
     public BallColor ballColor;
 
-    private int _pathIndex = 1;
+    public int _pathIndex = 1;
     public float Speed;
     private List<Ball> _neighbourBalls = new List<Ball>();
     public int IndexInQueue = 0;
+
+    public int PathIndex { get => _pathIndex; set => _pathIndex = value; }
 
     public void UpdateMove(Transform[] path)
     {
@@ -45,7 +47,15 @@ public class Ball : MonoBehaviour
         direction.Normalize();
         transform.position += moveStep * direction;
 
-        PushOtherBalls(path);
+        //PushOtherBalls(path);
+        Ball ballAfter = MainGame.Instance.BallQueue.GetBallAfter(this); 
+        if (ballAfter)
+        {
+            if(Vector3.Distance(transform.position, ballAfter.transform.position) < MainGame.Instance.BallSize)
+            {
+                ballAfter.UpdateMove(path);
+            }
+        }
     }
 
     public void UpdateMove(Transform[] path, float distance)
@@ -57,32 +67,32 @@ public class Ball : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        Ball otherBall;
-        if(collision.TryGetComponent<Ball>(out otherBall))
-        {
-            _neighbourBalls.Add(otherBall);
-        }
-    }
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    Ball otherBall;
+    //    if(collision.TryGetComponent<Ball>(out otherBall))
+    //    {
+    //        _neighbourBalls.Add(otherBall);
+    //    }
+    //}
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        Ball otherBall;
-        if (collision.TryGetComponent<Ball>(out otherBall))
-        {
-            _neighbourBalls.Remove(otherBall);
-        }
-    }
+    //private void OnTriggerExit2D(Collider2D collision)
+    //{
+    //    Ball otherBall;
+    //    if (collision.TryGetComponent<Ball>(out otherBall))
+    //    {
+    //        _neighbourBalls.Remove(otherBall);
+    //    }
+    //}
 
-    public void PushOtherBalls(Transform[] path)
-    {
-        foreach (Ball ball in _neighbourBalls)
-        {
-            if(ball.IndexInQueue < IndexInQueue)
-            {
-                ball.UpdateMove(path);
-            }
-        }
-    }
+    //public void PushOtherBalls(Transform[] path)
+    //{
+    //    foreach (Ball ball in _neighbourBalls)
+    //    {
+    //        if(ball.IndexInQueue < IndexInQueue)
+    //        {
+    //            ball.UpdateMove(path);
+    //        }
+    //    }
+    //}
 }

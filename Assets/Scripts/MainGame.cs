@@ -7,14 +7,26 @@ using UnityEngine;
 public class MainGame : MonoBehaviour
 {
     public Transform[] _nodes;
-    [SerializeField] private GameObject _pathParent, _ballsParent, _frog;
+    [SerializeField] private GameObject _pathParent, _ballsParent, _frog, _ballToShoot;
     [SerializeField] GameObject[] _prefabBalls;
     GameObject _ballInstance = null;
     Ball _currentBall;
-    BallQueue _ballQueue = new BallQueue();
-    [SerializeField] private float _instanciationFrequency = 0.3f, _ballSpeed = 2f;
+    private BallQueue _ballQueue = new BallQueue();
+    [SerializeField] private float _instanciationFrequency = 0.3f, _ballSpeed = 2f, projectileSpeed = 4f;
     [SerializeField, Range(1, 100)] private int _numberOfBallsToInstanciate = 10;
-    float BallSize;
+    public float BallSize;
+
+    public static MainGame Instance;
+
+    public BallQueue BallQueue { get => _ballQueue; }
+
+    private void Awake()
+    {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+    }
 
     void Start()
     {
@@ -25,6 +37,8 @@ public class MainGame : MonoBehaviour
         if (_nodes.Length >= 2) _initiateBallTransform = _nodes[1];
 
         StartCoroutine(CreateBallQueue(_initiateBallTransform));
+
+        _ballToShoot = GameObject.Instantiate(_prefabBalls[Random.Range(0, _prefabBalls.Length)], _frog.transform.position, _frog.transform.rotation);
     }
 
     IEnumerator CreateBallQueue(Transform _initiateBallTransform)
@@ -40,8 +54,8 @@ public class MainGame : MonoBehaviour
                 _currentBall = _ballInstance.GetComponent<Ball>();
                 _currentBall.IndexInQueue = i;
                 _currentBall.Speed = _ballSpeed;
-                _currentBall.UpdateMove(_nodes, BallSize * (float)(_numberOfBallsToInstanciate - i));
                 _ballQueue.Balls.Add(_currentBall);
+                _currentBall.UpdateMove(_nodes, BallSize * (float)(_numberOfBallsToInstanciate - i));
             }
 
             yield return new WaitForSecondsRealtime(_instanciationFrequency);
@@ -55,21 +69,21 @@ public class MainGame : MonoBehaviour
 
     void Update()
     {
-        FrogLookAtMouse();
-        ShootBallFromFrog();
+        ShootBallFromFrog(FrogLookAtMouse());
+        _ballToShoot = GameObject.Instantiate(_prefabBalls[Random.Range(0, _prefabBalls.Length)], _frog.transform.position, _frog.transform.rotation);
     }
 
-    void ShootBallFromFrog()
+    void ShootBallFromFrog(Vector3 direction)
     {
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
-            GameObject ballToShoot = GameObject.Instantiate(_prefabBalls[Random.Range(0, _prefabBalls.Length)]);
-            ballToShoot.transform.position = _frog.transform.position;
-            ballToShoot.GetComponent<Ball>().enabled = false;
+            _ballToShoot.transform.position = _frog.transform.position;
+            _ballToShoot.GetComponent<Ball>().enabled = false;
+            _ballToShoot.AddComponent<Projectile>().Initialize(direction.normalized, projectileSpeed);
         }
     }
 
-    private void FrogLookAtMouse()
+    private Vector3 FrogLookAtMouse()
     {
         Vector3 worldMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 direction = worldMousePosition - _frog.transform.position;
@@ -78,5 +92,6 @@ public class MainGame : MonoBehaviour
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 90;
 
         _frog.transform.localRotation = Quaternion.Euler(0, 0, angle);
+        return direction;
     }
 }

@@ -253,6 +253,7 @@ MonoBehaviour:
   - {fileID: 4793276122118290135, guid: ab66785adb185d941aab7df06e859de8, type: 3}
   _instanciationFrequency: 0.3
   _ballSpeed: 2
+  projectileSpeed: 10
   _numberOfBallsToInstanciate: 40
 --- !u!4 &506473185
 Transform:
