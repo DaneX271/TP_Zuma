@@ -10,25 +10,36 @@ public class MainGame : MonoBehaviour
     [SerializeField] GameObject _ball;
     GameObject _ballInstance = null;
     Ball _currentBall;
+    BallQueue _ballQueue = new BallQueue();
+    [SerializeField] private float _instanciationFrequency = 0.3f;
+    [SerializeField, Range(1, 100)] private int _numberOfBallsToInstanciate = 10;
 
-    void Start()
+    IEnumerator Start()
     {
         if(_pathParent) _nodes = _pathParent.GetComponentsInChildren<Transform>();
         Transform _initiateBallTransform = null;
 
         if (_nodes.Length >= 2) _initiateBallTransform = _nodes[1];
 
-        if (_ball && _initiateBallTransform) _ballInstance = GameObject.Instantiate(_ball, _initiateBallTransform.position, _initiateBallTransform.rotation);
-        
-        if (_ballInstance)
+        for (int i = 0; i < _numberOfBallsToInstanciate; i++)
         {
-            _ballInstance.transform.parent = _ballsParent.transform;
-            _currentBall = _ballInstance.GetComponent<Ball>();
+            if (_ball && _initiateBallTransform) _ballInstance = GameObject.Instantiate(_ball, _initiateBallTransform.position, _initiateBallTransform.rotation);
+
+            if (_ballInstance)
+            {
+                _ballInstance.transform.parent = _ballsParent.transform;
+                _currentBall = _ballInstance.GetComponent<Ball>();
+                _ballQueue.Balls.Add(_currentBall);
+            }
+
+            yield return new WaitForSecondsRealtime(_instanciationFrequency);
         }
+
+        
     }
 
     void Update()
     {
-        _currentBall.UpdateMove(_nodes);
+        _ballQueue.Update(_nodes);
     }
 }

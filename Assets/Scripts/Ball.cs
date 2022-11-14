@@ -5,7 +5,8 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     private int _pathIndex = 1;
-    public float Speed = 2;
+    public float Speed = 10;
+    private List<Ball> _neighbourBalls = new List<Ball>();
 
     public void UpdateMove(Transform[] path)
     {
@@ -32,5 +33,23 @@ public class Ball : MonoBehaviour
 
         direction.Normalize();
         transform.position += moveStep * direction;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Ball otherBall;
+        if(collision.TryGetComponent<Ball>(out otherBall))
+        {
+            _neighbourBalls.Add(otherBall);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        Ball otherBall;
+        if (collision.TryGetComponent<Ball>(out otherBall))
+        {
+            _neighbourBalls.Remove(otherBall);
+        }
     }
 }
